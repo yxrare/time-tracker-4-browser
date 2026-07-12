@@ -257,7 +257,6 @@ declare namespace tt4b {
          * Restricted periods
          * [0, 1] means from 00:00 to 00:01
          * [0, 120] means from 00:00 to 02:00
-         * [1439, 2] means from 23:59 to 00:02(+1 day)
          * @since 2.0.0
          */
         type Period = Vector<2>
@@ -992,6 +991,14 @@ declare namespace tt4b {
              * Interval to auto-backup data, minutes
              */
             autoBackUpInterval: number
+            /**
+             * Whether to export a JSON backup to the local Downloads folder every day
+             */
+            localAutoBackUp: boolean
+            /**
+             * Local daily backup time in minutes after midnight
+             */
+            localBackUpOffset: number
         }
 
         type AccessibilityOption = {

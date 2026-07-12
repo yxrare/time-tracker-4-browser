@@ -1,5 +1,28 @@
 # Time Tracker for Browser
 
+## Daily local JSON backup (custom fork)
+
+This fork adds a configurable daily local backup for browser activity data.
+
+- Enable or disable automatic local backups in **Options → Data Backup**.
+- Choose the daily export time; the default is **23:55**.
+- Backups are downloaded as JSON to `Downloads/DigitalFootprint/`.
+- File names follow `timer_backup_YYYYMMDD_HHMMSS.json`.
+- Remote backup can remain set to **Always off**; no GitHub token or cloud service is required.
+- Data stays on the local computer unless the user chooses to move or upload it.
+
+### Install this fork in Chrome
+
+1. Run `npm install --include=optional --ignore-scripts`.
+2. Run `npm run build`.
+3. Open `chrome://extensions/` and enable **Developer mode**.
+4. Select **Load unpacked** and choose the generated `dist_prod` directory.
+5. Open **Options → Data Backup** to configure the local backup time.
+
+Before switching from the Chrome Web Store version, export a JSON backup from **Data Migration**. Import it into this fork, verify that the data is present, and then disable the old extension to avoid duplicate tracking.
+
+This project remains based on [sheepzh/time-tracker-4-browser](https://github.com/sheepzh/time-tracker-4-browser) and retains its original license and attribution.
+
 [![codecov](https://codecov.io/gh/sheepzh/time-tracker-4-browser/branch/main/graph/badge.svg?token=S98QSBSKCR&style=flat-square)](https://codecov.io/gh/sheepzh/time-tracker-4-browser)
 [![](https://img.shields.io/badge/license-Anti%20996-blue)](https://github.com/996icu/996.ICU)
 [![Crowdin](https://badges.crowdin.net/timer-chrome-edge-firefox/localized.svg)](https://crowdin.com/project/timer-chrome-edge-firefox)

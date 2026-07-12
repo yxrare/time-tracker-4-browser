@@ -6,6 +6,8 @@ function copy(target: tt4b.option.BackupOption, source: tt4b.option.BackupOption
     target.backupType = source.backupType
     target.autoBackUp = source.autoBackUp
     target.autoBackUpInterval = source.autoBackUpInterval
+    target.localAutoBackUp = source.localAutoBackUp
+    target.localBackUpOffset = source.localBackUpOffset
     target.backupExts = source.backupExts
     target.backupAuths = source.backupAuths
     target.clientName = source.clientName
@@ -19,6 +21,8 @@ export const useBackup = () => {
         // Only reset type and auto flag
         option.backupType = DEFAULT_BACKUP.backupType
         option.autoBackUp = DEFAULT_BACKUP.autoBackUp
+        option.localAutoBackUp = DEFAULT_BACKUP.localAutoBackUp
+        option.localBackUpOffset = DEFAULT_BACKUP.localBackUpOffset
     }
 
     const auth = computed({

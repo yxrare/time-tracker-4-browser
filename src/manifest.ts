@@ -47,6 +47,7 @@ const _default: chrome.runtime.ManifestV3 = {
         'tabs',
         'contextMenus',
         'alarms',
+        'downloads',
         'scripting',
         'sidePanel',
     ],

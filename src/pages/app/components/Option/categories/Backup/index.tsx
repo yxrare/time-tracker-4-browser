@@ -15,6 +15,7 @@ import { computed, defineComponent } from "vue"
 import type { CategoryInstance } from '../../types'
 import AutoInput from "./AutoInput"
 import Footer from "./Footer"
+import LocalBackupInput from './LocalBackupInput'
 import { useBackup } from "./useBackup"
 
 const ALL_TYPES: tt4b.backup.Type[] = [
@@ -44,6 +45,14 @@ const _default = defineComponent((_, ctx) => {
     ctx.expose({ reset } satisfies CategoryInstance)
 
     return () => <OptionLines>
+        <OptionItem label="Local backup {input}" defaultValue={true}>
+            <LocalBackupInput
+                enabled={option.localAutoBackUp}
+                offset={option.localBackUpOffset}
+                onEnabledChange={val => option.localAutoBackUp = val}
+                onOffsetChange={val => option.localBackUpOffset = val}
+            />
+        </OptionItem>
         <OptionItem label={msg => msg.option.backup.type} defaultValue={TYPE_NAMES['none']}>
             <ElSelect
                 modelValue={option.backupType}

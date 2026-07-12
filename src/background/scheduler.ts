@@ -3,9 +3,12 @@ import alarmManager from "./alarm-manager"
 import backupProcessor from "./service/backup/processor"
 import optionHolder from './service/components/option-holder'
 import notificationProcessor from "./service/notification/processor"
+import { exportData } from './service/components/immigration'
+import { formatTime } from '@util/time'
 
 const BACKUP_ALARM_NAME = 'auto-backup-data'
 const NOTIFICATION_ALARM_NAME = 'notification-data'
+const LOCAL_BACKUP_ALARM_NAME = 'local-auto-backup-data'
 
 const needResetBackup = (newVal: tt4b.option.AllOption, oldVal: tt4b.option.AllOption): boolean =>
     newVal.autoBackUp !== oldVal.autoBackUp || newVal.autoBackUpInterval !== oldVal.autoBackUpInterval
@@ -13,10 +16,14 @@ const needResetBackup = (newVal: tt4b.option.AllOption, oldVal: tt4b.option.AllO
 const needResetNotification = (newVal: tt4b.option.AllOption, oldVal: tt4b.option.AllOption): boolean =>
     newVal.notificationCycle !== oldVal.notificationCycle || newVal.notificationOffset !== oldVal.notificationOffset
 
+const needResetLocalBackup = (newVal: tt4b.option.AllOption, oldVal: tt4b.option.AllOption): boolean =>
+    newVal.localAutoBackUp !== oldVal.localAutoBackUp || newVal.localBackUpOffset !== oldVal.localBackUpOffset
+
 export async function initScheduler(): Promise<void> {
     optionHolder.addChangeListener((newVal, oldVal) => {
         if (needResetBackup(newVal, oldVal)) resetBackup()
         if (needResetNotification(newVal, oldVal)) resetNotification()
+        if (needResetLocalBackup(newVal, oldVal)) resetLocalBackup()
     })
 
     const existBackup = await alarmManager.getAlarm(BACKUP_ALARM_NAME)
@@ -24,6 +31,40 @@ export async function initScheduler(): Promise<void> {
 
     const existNotification = await alarmManager.getAlarm(NOTIFICATION_ALARM_NAME)
     !existNotification && await resetNotification()
+
+    const existLocalBackup = await alarmManager.getAlarm(LOCAL_BACKUP_ALARM_NAME)
+    !existLocalBackup && await resetLocalBackup()
+}
+
+const nextDailyTime = (offset: number): number => {
+    const next = new Date()
+    next.setHours(0, offset, 0, 0)
+    while (next.getTime() <= Date.now()) next.setDate(next.getDate() + 1)
+    return next.getTime()
+}
+
+const downloadLocalBackup = async (): Promise<void> => {
+    const data = await exportData()
+    const timestamp = formatTime(new Date(), '{y}{m}{d}_{h}{i}{s}')
+    const json = JSON.stringify(data, null, 4)
+    await chrome.downloads.download({
+        url: `data:application/json;charset=utf-8,${encodeURIComponent(json)}`,
+        filename: `DigitalFootprint/timer_backup_${timestamp}.json`,
+        conflictAction: 'uniquify',
+        saveAs: false,
+    })
+}
+
+async function resetLocalBackup(): Promise<void> {
+    await alarmManager.remove(LOCAL_BACKUP_ALARM_NAME)
+    const option = await optionHolder.get()
+    if (!option.localAutoBackUp) return
+
+    await alarmManager.setWhen(
+        LOCAL_BACKUP_ALARM_NAME,
+        () => nextDailyTime(option.localBackUpOffset),
+        downloadLocalBackup,
+    )
 }
 
 async function resetBackup(): Promise<void> {

@@ -49,6 +49,9 @@ export const DEFAULT_BACKUP: tt4b.option.BackupOption = {
     backupExts: {},
     autoBackUp: false,
     autoBackUpInterval: 30,
+    localAutoBackUp: true,
+    // 23:55
+    localBackUpOffset: 23 * 60 + 55,
 } as const
 
 export const DEFAULT_ACCESSIBILITY: tt4b.option.AccessibilityOption = {

@@ -32,8 +32,11 @@ export async function initScheduler(): Promise<void> {
     const existNotification = await alarmManager.getAlarm(NOTIFICATION_ALARM_NAME)
     !existNotification && await resetNotification()
 
-    const existLocalBackup = await alarmManager.getAlarm(LOCAL_BACKUP_ALARM_NAME)
-    !existLocalBackup && await resetLocalBackup()
+    // Alarm handlers live in the service worker's memory, while Chrome alarms
+    // survive service-worker suspension. Always re-register the local handler
+    // when the worker starts; otherwise an existing alarm can fire with no
+    // corresponding in-memory callback.
+    await resetLocalBackup()
 }
 
 const nextDailyTime = (offset: number): number => {

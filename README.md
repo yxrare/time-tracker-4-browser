@@ -1,5 +1,9 @@
 # Time Tracker for Browser
 
+> This is a customized fork of the original **Time Tracker for Browser**. It adds configurable daily local JSON backups while preserving the original website tracking, habit analysis, focus, and blocking features.
+>
+> 本项目基于原版 **Time Tracker for Browser** 定制，在保留网站时间统计、习惯分析、专注和网站限制等原有功能的基础上，新增了可配置的每日本地 JSON 自动备份功能。
+
 ## Daily local JSON backup (custom fork)
 
 This fork adds a configurable daily local backup for browser activity data.
